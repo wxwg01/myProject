@@ -1,0 +1,1 @@
+gtrace=com.alibaba.wg.dubbo.filter.GlobalTraceFilter

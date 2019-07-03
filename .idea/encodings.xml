@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding">
+    <file url="file://$PROJECT_DIR$" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/dubbo_c" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/dubbo_p" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/dubbo_p/dubbo_client" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/dubbo_p/dubbo_p_start" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/dubbo_utils" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/ribbon_consumer" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/sc" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/sc2" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/server_addres" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/server_sc" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/start" charset="UTF-8" />
+  </component>
+</project>
