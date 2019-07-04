@@ -16,7 +16,7 @@ import java.util.UUID;
 @Activate(group = {Constants.CONSUMER,Constants.PROVIDER},order = -9999)
 public class GlobalTraceFilter implements Filter {
 
-    //@Override
+    @Override
     public Result invoke(Invoker<?> invoker, Invocation invocation) throws RpcException {
         String traceId = RpcContext.getContext().getAttachment("traceId");
         if(!StringUtils.isBlank(traceId)) {
