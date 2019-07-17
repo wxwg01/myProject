@@ -15,7 +15,10 @@
         <module name="sc2" />
         <module name="server_addres" />
         <module name="server_sc" />
+        <module name="spring_cloud_cconfig_service" />
         <module name="start" />
+        <module name="test" />
+        <module name="test2" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel target="8" />

@@ -1,0 +1,9 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/qrtz
+    username: root
+    password: 123456
+quartz:
+  enabled: true
+server:
+  port: 8088

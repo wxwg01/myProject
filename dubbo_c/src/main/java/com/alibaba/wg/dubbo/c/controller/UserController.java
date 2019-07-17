@@ -3,6 +3,7 @@ package com.alibaba.wg.dubbo.c.controller;
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.wg.dubbo.pro.client.DubboService;
+import io.seata.spring.annotation.GlobalTransactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -19,6 +20,7 @@ public class UserController {
     private DubboService dubboService;
 
 
+    @GlobalTransactional(timeoutMills = 10*1000 ,name = "dubbo_c_tx")
     @GetMapping
     public String getUser(){
         return JSONObject.toJSONString(dubboService.getList("aa"));

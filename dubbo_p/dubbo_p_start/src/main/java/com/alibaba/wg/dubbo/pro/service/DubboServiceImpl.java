@@ -14,7 +14,7 @@ import java.util.List;
  * @date : 2019/5/9
  */
 @Service(interfaceClass = DubboService.class)
-@Component
+@Component("dubboServiceImpl")
 public class DubboServiceImpl implements DubboService {
     @Override
     public List<String> getList(String name) {

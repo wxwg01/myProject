@@ -16,11 +16,7 @@
             <artifactId>spring-boot-starter</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
+
 
         <!-- 引入spring-boot-starter以及dubbo和curator的依赖 -->
         <dependency>
@@ -36,8 +32,14 @@
         <dependency>
             <groupId>com.aliyun.wagngang</groupId>
             <artifactId>dubbo_utils</artifactId>
-            <version>1.0-SNAPSHOT</version>
         </dependency>
+
+  <!--      <dependency>
+            <groupId>e-iceblue</groupId>
+            <artifactId>spire.presentation</artifactId>
+            <version>2.2.2</version>
+        </dependency>-->
+
     </dependencies>
 
     <build>
@@ -49,5 +51,12 @@
         </plugins>
     </build>
 
+    <!--<repositories>-->
+        <!--<repository>-->
+            <!--<id>com.e-iceblue</id>-->
+            <!--<name>e-iceblue</name>-->
+            <!--<url>http://repo.e-iceblue.com/nexus/content/groups/public/</url>-->
+        <!--</repository>-->
+    <!--</repositories>-->
 
 </project>

@@ -18,6 +18,9 @@
         <module>dubbo_p</module>
         <module>dubbo_c</module>
         <module>dubbo_utils</module>
+        <module>spring_cloud_cconfig_service</module>
+        <module>test</module>
+        <module>test2</module>
     </modules>
 
     <parent>
@@ -67,7 +70,7 @@
         </plugins>
     </build>
 
-    <repositories>
+    <!--<repositories>
         <repository>
             <id>spring-milestones</id>
             <name>Spring Milestones</name>
@@ -76,7 +79,7 @@
                 <enabled>false</enabled>
             </snapshots>
         </repository>
-    </repositories>
+    </repositories>-->
 
 
 </project>

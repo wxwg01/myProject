@@ -1,0 +1,11 @@
+server:
+  port: 8888
+spring:
+  cloud:
+    config:
+      server:
+        git:
+          uri: https://github.com/wxwg01/config.git
+          password: username
+          username: password
+          search-paths: config-repo
