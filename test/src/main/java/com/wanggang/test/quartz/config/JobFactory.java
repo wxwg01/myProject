@@ -1,4 +1,4 @@
-package com.wanggang.test.utils;
+package com.wanggang.test.quartz.config;
 
 import org.quartz.spi.TriggerFiredBundle;
 import org.springframework.beans.factory.annotation.Autowired;

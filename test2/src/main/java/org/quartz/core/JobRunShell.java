@@ -1,4 +1,4 @@
-package org.quartz.core;
+
 /*
  * Copyright 2001-2009 Terracotta, Inc.
  *
@@ -16,10 +16,15 @@ package org.quartz.core;
  *
  */
 
+package org.quartz.core;
+
 import com.alibaba.dts.client.executor.job.context.ClientContextImpl;
 import com.alibaba.dts.common.domain.store.JobInstanceSnapshot;
 import com.alibaba.edas.schedulerx.ScxSimpleJobContext;
 import com.alibaba.edas.schedulerx.ScxSimpleJobProcessor;
+import com.alibaba.fastjson.JSONObject;
+import com.wanggang.test.quartz.domain.QuartzJobDetail;
+import com.wanggang.test.quartz.utils.SchedulerUtils;
 import org.quartz.*;
 import org.quartz.Trigger.CompletedExecutionInstruction;
 import org.quartz.impl.JobExecutionContextImpl;
@@ -31,7 +36,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * <p>
- * org.quartz.core.JobRunShell instances are responsible for providing the 'safe' environment
+ * JobRunShell instances are responsible for providing the 'safe' environment
  * for <code>Job</code> s to run in, and for performing all of the work of
  * executing the <code>Job</code>, catching ANY thrown exceptions, updating
  * the <code>Trigger</code> with the <code>Job</code>'s completion code,
@@ -39,16 +44,16 @@ import org.slf4j.LoggerFactory;
  * </p>
  *
  * <p>
- * A <code>org.quartz.core.JobRunShell</code> instance is created by a <code>JobRunShellFactory</code>
+ * A <code>JobRunShell</code> instance is created by a <code>JobRunShellFactory</code>
  * on behalf of the <code>QuartzSchedulerThread</code> which then runs the
  * shell in a thread from the configured <code>ThreadPool</code> when the
  * scheduler determines that a <code>Job</code> has been triggered.
  * </p>
  *
  * @see JobRunShellFactory
- * @see org.quartz.core.QuartzSchedulerThread
- * @see org.quartz.Job
- * @see org.quartz.Trigger
+ * @see QuartzSchedulerThread
+ * @see Job
+ * @see Trigger
  *
  * @author James House
  */
@@ -60,6 +65,7 @@ public class JobRunShell extends SchedulerListenerSupport implements Runnable {
      *
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      */
+
 
     protected JobExecutionContextImpl jec = null;
 
@@ -83,7 +89,7 @@ public class JobRunShell extends SchedulerListenerSupport implements Runnable {
 
     /**
      * <p>
-     * Create a org.quartz.core.JobRunShell instance with the given settings.
+     * Create a JobRunShell instance with the given settings.
      * </p>
      *
      * @param scheduler
@@ -338,9 +344,12 @@ public class JobRunShell extends SchedulerListenerSupport implements Runnable {
 
 
     private void execute(Job job) throws JobExecutionException {
-        // 改造成redis分发
+        if(!SchedulerUtils.enable){
+            job.execute(jec);
+            return;
+        }
         if(job instanceof ScxSimpleJobProcessor){
-            ScxSimpleJobProcessor jj = (ScxSimpleJobProcessor)job;
+            ScxSimpleJobProcessor processor = (ScxSimpleJobProcessor)job;
             ScxSimpleJobContext simpleJobContext = null;
             //simpleJobContext = ScxSimpleJobContext.class.newInstance();
             com.alibaba.dts.common.domain.store.Job job1 = new com.alibaba.dts.common.domain.store.Job();
@@ -353,11 +362,18 @@ public class JobRunShell extends SchedulerListenerSupport implements Runnable {
             jobInstanceSnapshot.setId(1000);
             simpleJobContext =  new ScxSimpleJobContext(job1 ,jobInstanceSnapshot,1);
 
-            jj.process(simpleJobContext);
+            processor.process(simpleJobContext);
         }else{
             job.execute(jec);
-
         }
+        JobKey jobKey = jec.getJobDetail().getKey();
+        String key = SchedulerUtils.getJobKey(jobKey.getName(), jobKey.getGroup());
+        QuartzJobDetail quartzJobDetail = SchedulerUtils.jobMap.get(key);
+        if(quartzJobDetail!=null ){
+            quartzJobDetail.setRunTimes(quartzJobDetail.getRunTimes()+1);
+        }
+        System.out.println(JSONObject.toJSONString(quartzJobDetail));
+
     }
 
     private boolean notifyJobListenersComplete(JobExecutionContext jobExCtxt, JobExecutionException jobExEx) {

@@ -1,5 +1,7 @@
-package com.wanggang.test.utils;
+package com.wanggang.test.quartz.service;
 
+import com.wanggang.test.quartz.domain.QuartzJobDetail;
+import com.wanggang.test.quartz.job.DynamicJob;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -14,11 +16,11 @@ import java.util.List;
 @Service
 public class QuartzJobDetailService {
 
-    void insertAppQuartzSer(QuartzJobDetail appQuartz){
+    public void insertAppQuartzSer(QuartzJobDetail appQuartz) {
         System.out.println("yeah");
-    };
+    }
 
-    QuartzJobDetail selectAppQuartzByIdSer(int id){
+    public QuartzJobDetail selectAppQuartzByIdSer(int id) {
         return getNewJob();
     }
 
@@ -28,18 +30,20 @@ public class QuartzJobDetailService {
     public void updateAppQuartzSer(QuartzJobDetail appQuartz) {
     }
 
-    List<QuartzJobDetail> getAll(){
-        return new ArrayList<QuartzJobDetail>(){{
+    public List<QuartzJobDetail> getAll() {
+
+        return new ArrayList<QuartzJobDetail>() {{
             this.add(getNewJob());
         }};
     }
 
-    private QuartzJobDetail getNewJob(){
+    QuartzJobDetail getNewJob() {
         QuartzJobDetail job = new QuartzJobDetail();
         job.setInvokeParam("com.wanggang.test");
         job.setJobName(DynamicJob.class.getName());
         job.setJobGroup("cdmp");
         job.setCronExpression("*/10 * * * * ?");
+        job.setRunOnce(false);
         return job;
     }
 }

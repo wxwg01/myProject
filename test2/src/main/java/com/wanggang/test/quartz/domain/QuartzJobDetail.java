@@ -1,4 +1,4 @@
-package com.wanggang.test.utils;
+package com.wanggang.test.quartz.domain;
 
 import lombok.Data;
 
@@ -16,6 +16,10 @@ public class QuartzJobDetail {
     private String startTime;  //任务开始时间
     private String cronExpression;  //corn表达式
     private String invokeParam;//需要传递的参数
+
+    private String state;// 状态
+    private boolean runOnce=false;//
+    private int runTimes=0;//
 
     private Class clazz;//系统
 

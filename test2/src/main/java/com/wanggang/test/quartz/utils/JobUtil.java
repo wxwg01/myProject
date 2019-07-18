@@ -1,10 +1,15 @@
-package com.wanggang.test.utils;
+package com.wanggang.test.quartz.utils;
 
+import com.wanggang.test.quartz.domain.QuartzJobDetail;
 import org.quartz.*;
+import org.quartz.impl.matchers.GroupMatcher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-@Service
+import java.util.HashSet;
+import java.util.Set;
+
+@Service("jobUtil")
 public class JobUtil {
     @Autowired
     private Scheduler scheduler;
@@ -25,7 +30,7 @@ public class JobUtil {
         jobDetail = JobBuilder.newJob(appQuartz.getClazz()).withIdentity(appQuartz.getJobName(), appQuartz.getJobGroup()).build();
 
         //表达式调度构建器(即任务执行的时间,不立即执行)
-        CronScheduleBuilder scheduleBuilder = CronScheduleBuilder.cronSchedule(appQuartz.getCronExpression()).withMisfireHandlingInstructionFireAndProceed();
+        CronScheduleBuilder scheduleBuilder = CronScheduleBuilder.cronSchedule(appQuartz.getCronExpression()).withMisfireHandlingInstructionDoNothing();
 
         //按新的cronExpression表达式构建一个新的trigger
         CronTrigger trigger = TriggerBuilder.newTrigger().withIdentity(appQuartz.getJobName(), appQuartz.getJobGroup())
@@ -36,6 +41,7 @@ public class JobUtil {
             trigger.getJobDataMap().put("invokeParam",appQuartz.getInvokeParam());
         }
         scheduler.scheduleJob(jobDetail, trigger);
+
         // pauseJob(appQuartz.getJobName(),appQuartz.getJobGroup());
         return "success";
     }
@@ -128,5 +134,26 @@ public class JobUtil {
         }
 
     }
+
+    public boolean checkExist(String name,String group){
+        JobKey jobKey = new JobKey(name,group );
+        try {
+            return scheduler.checkExists(jobKey);
+        } catch (SchedulerException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public Set<JobKey> getExistKeys(){
+        try {
+            return scheduler.getJobKeys(GroupMatcher.anyGroup());
+        } catch (SchedulerException e) {
+            e.printStackTrace();
+        }
+        return new HashSet<>();
+
+    }
+
 
 }

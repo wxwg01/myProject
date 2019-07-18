@@ -1,5 +1,9 @@
-package com.wanggang.test.utils;
+/*
+package com.wanggang.test.quartz.app;
 
+import com.wanggang.test.quartz.domain.QuartzJobDetail;
+import com.wanggang.test.quartz.service.QuartzJobDetailService;
+import com.wanggang.test.quartz.utils.JobUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -93,3 +97,4 @@ public class JobController {
     }
 
 }
+*/

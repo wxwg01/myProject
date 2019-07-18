@@ -19,17 +19,15 @@
 package org.quartz.core;
 
 import com.alibaba.dts.client.executor.job.context.ClientContextImpl;
-import com.alibaba.dts.client.executor.job.processor.SimpleJobProcessor;
-import com.alibaba.dts.client.executor.simple.processor.SimpleJobContext;
 import com.alibaba.dts.common.domain.store.JobInstanceSnapshot;
 import com.alibaba.edas.schedulerx.ScxSimpleJobContext;
 import com.alibaba.edas.schedulerx.ScxSimpleJobProcessor;
-import org.quartz.Job;
-import org.quartz.JobDetail;
-import org.quartz.JobExecutionContext;
-import org.quartz.JobExecutionException;
-import org.quartz.Scheduler;
-import org.quartz.SchedulerException;
+import com.alibaba.fastjson.JSONObject;
+import com.wanggang.test.quartz.config.ApplicationContextUtils;
+import com.wanggang.test.quartz.domain.QuartzJobDetail;
+import com.wanggang.test.quartz.utils.JobUtil;
+import com.wanggang.test.quartz.utils.SchedulerUtils;
+import org.quartz.*;
 import org.quartz.Trigger.CompletedExecutionInstruction;
 import org.quartz.impl.JobExecutionContextImpl;
 import org.quartz.listeners.SchedulerListenerSupport;
@@ -69,6 +67,7 @@ public class JobRunShell extends SchedulerListenerSupport implements Runnable {
      *
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      */
+
 
     protected JobExecutionContextImpl jec = null;
 
@@ -347,9 +346,12 @@ public class JobRunShell extends SchedulerListenerSupport implements Runnable {
 
 
     private void execute(Job job) throws JobExecutionException {
-        // 改造成redis分发
+        if(!SchedulerUtils.enable){
+            job.execute(jec);
+            return;
+        }
         if(job instanceof ScxSimpleJobProcessor){
-            ScxSimpleJobProcessor jj = (ScxSimpleJobProcessor)job;
+            ScxSimpleJobProcessor processor = (ScxSimpleJobProcessor)job;
             ScxSimpleJobContext simpleJobContext = null;
             //simpleJobContext = ScxSimpleJobContext.class.newInstance();
             com.alibaba.dts.common.domain.store.Job job1 = new com.alibaba.dts.common.domain.store.Job();
@@ -362,11 +364,18 @@ public class JobRunShell extends SchedulerListenerSupport implements Runnable {
             jobInstanceSnapshot.setId(1000);
             simpleJobContext =  new ScxSimpleJobContext(job1 ,jobInstanceSnapshot,1);
 
-            jj.process(simpleJobContext);
+            processor.process(simpleJobContext);
         }else{
             job.execute(jec);
-
         }
+        JobKey jobKey = jec.getJobDetail().getKey();
+        String key = SchedulerUtils.getJobKey(jobKey.getName(), jobKey.getGroup());
+        QuartzJobDetail quartzJobDetail = SchedulerUtils.jobMap.get(key);
+        if(quartzJobDetail!=null ){
+            quartzJobDetail.setRunTimes(quartzJobDetail.getRunTimes()+1);
+        }
+        System.out.println(JSONObject.toJSONString(quartzJobDetail));
+
     }
 
     private boolean notifyJobListenersComplete(JobExecutionContext jobExCtxt, JobExecutionException jobExEx) {
