@@ -16,6 +16,7 @@ public class QuartzJobDetail {
     private String startTime;  //任务开始时间
     private String cronExpression;  //corn表达式
     private String invokeParam;//需要传递的参数
+    private int type=1;
 
     private String state;// 状态
     private boolean runOnce=false;//

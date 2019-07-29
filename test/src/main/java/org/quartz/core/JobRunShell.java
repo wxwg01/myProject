@@ -350,12 +350,25 @@ public class JobRunShell extends SchedulerListenerSupport implements Runnable {
             job.execute(jec);
             return;
         }
+
+        JobKey jobKey = jec.getJobDetail().getKey();
+        String key = SchedulerUtils.getJobKey(jobKey.getName(), jobKey.getGroup());
+        QuartzJobDetail quartzJobDetail = SchedulerUtils.jobMap.get(key);
+        if(quartzJobDetail!=null ){
+            quartzJobDetail.setRunTimes(quartzJobDetail.getRunTimes()+1);
+        }
+        //System.out.println(JSONObject.toJSONString(quartzJobDetail));
+
         if(job instanceof ScxSimpleJobProcessor){
             ScxSimpleJobProcessor processor = (ScxSimpleJobProcessor)job;
             ScxSimpleJobContext simpleJobContext = null;
             //simpleJobContext = ScxSimpleJobContext.class.newInstance();
             com.alibaba.dts.common.domain.store.Job job1 = new com.alibaba.dts.common.domain.store.Job();
             job1.setJobArguments("aaa");
+
+            if(quartzJobDetail!=null ){
+                job1.setJobArguments(quartzJobDetail.getRunTimes()+"");
+            }
             job1.setId(1000);
             job1.setTaskName("testttt");
 
@@ -364,17 +377,13 @@ public class JobRunShell extends SchedulerListenerSupport implements Runnable {
             jobInstanceSnapshot.setId(1000);
             simpleJobContext =  new ScxSimpleJobContext(job1 ,jobInstanceSnapshot,1);
 
+
+
             processor.process(simpleJobContext);
         }else{
             job.execute(jec);
         }
-        JobKey jobKey = jec.getJobDetail().getKey();
-        String key = SchedulerUtils.getJobKey(jobKey.getName(), jobKey.getGroup());
-        QuartzJobDetail quartzJobDetail = SchedulerUtils.jobMap.get(key);
-        if(quartzJobDetail!=null ){
-            quartzJobDetail.setRunTimes(quartzJobDetail.getRunTimes()+1);
-        }
-        System.out.println(JSONObject.toJSONString(quartzJobDetail));
+
 
     }
 

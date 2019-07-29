@@ -30,7 +30,7 @@ public class JobUtil {
         jobDetail = JobBuilder.newJob(appQuartz.getClazz()).withIdentity(appQuartz.getJobName(), appQuartz.getJobGroup()).build();
 
         //表达式调度构建器(即任务执行的时间,不立即执行)
-        CronScheduleBuilder scheduleBuilder = CronScheduleBuilder.cronSchedule(appQuartz.getCronExpression()).withMisfireHandlingInstructionDoNothing();
+        CronScheduleBuilder scheduleBuilder = getCronScheduleBuilder(appQuartz.getCronExpression());
 
         //按新的cronExpression表达式构建一个新的trigger
         CronTrigger trigger = TriggerBuilder.newTrigger().withIdentity(appQuartz.getJobName(), appQuartz.getJobGroup())
@@ -118,8 +118,8 @@ public class JobUtil {
         if (scheduler.checkExists(jobKey) && scheduler.checkExists(triggerKey)) {
             CronTrigger trigger = (CronTrigger) scheduler.getTrigger(triggerKey);
             //表达式调度构建器,不立即执行
-            CronScheduleBuilder scheduleBuilder = CronScheduleBuilder.cronSchedule(appQuartz.getCronExpression()).withMisfireHandlingInstructionDoNothing();
-            //按新的cronExpression表达式重新构建trigger
+            CronScheduleBuilder scheduleBuilder = getCronScheduleBuilder(appQuartz.getCronExpression());
+
             trigger = trigger.getTriggerBuilder().withIdentity(triggerKey)
                 .withSchedule(scheduleBuilder).build();
             //修改参数
@@ -155,5 +155,11 @@ public class JobUtil {
 
     }
 
+    private CronScheduleBuilder getCronScheduleBuilder(String cron){
+        CronScheduleBuilder scheduleBuilder = CronScheduleBuilder.cronSchedule(cron).withMisfireHandlingInstructionDoNothing();
+        //CronScheduleBuilder scheduleBuilder = CronScheduleBuilder.cronSchedule(cron).withMisfireHandlingInstructionFireAndProceed();
+        //CronScheduleBuilder scheduleBuilder = CronScheduleBuilder.cronSchedule(cron).withMisfireHandlingInstructionIgnoreMisfires();
+        return scheduleBuilder;
+    }
 
 }

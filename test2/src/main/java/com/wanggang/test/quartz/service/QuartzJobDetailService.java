@@ -42,7 +42,7 @@ public class QuartzJobDetailService {
         job.setInvokeParam("com.wanggang.test");
         job.setJobName(DynamicJob.class.getName());
         job.setJobGroup("cdmp");
-        job.setCronExpression("*/10 * * * * ?");
+        job.setCronExpression("0/10 * * * * ?");
         job.setRunOnce(false);
         return job;
     }

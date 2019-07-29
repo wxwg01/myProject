@@ -88,9 +88,10 @@ public class SchedulerRunning {
             }else{
                 // 判断是否暂停，是否要开启
                 try {
-                    String string = jobUtil.resumeJob(quartzJobDetail.getJobName(), quartzJobDetail.getJobGroup());
-                    System.out.println(string);
-                } catch (SchedulerException e) {
+                    System.out.println(jobUtil.modifyJob(quartzJobDetail));
+                    //System.out.println(jobUtil.deleteJob(quartzJobDetail));
+                    //System.out.println(jobUtil.addJob(quartzJobDetail));
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }

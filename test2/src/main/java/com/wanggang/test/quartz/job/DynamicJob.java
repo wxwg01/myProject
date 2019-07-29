@@ -38,7 +38,13 @@ public class DynamicJob implements ScxSimpleJobProcessor, Job {
 
     @Override
     public ProcessResult process(ScxSimpleJobContext simpleJobContext) {
-        System.out.println(simpleJobContext.getJob().getJobArguments()+" process "+new Date());
+        System.out.println(simpleJobContext.getJob().getJobArguments()+" process start "+new Date());
+        try {
+            Thread.sleep(15*1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        System.out.println(simpleJobContext.getJob().getJobArguments()+" process end "+new Date());
         return new ProcessResult(true);
     }
 }
